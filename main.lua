@@ -64,9 +64,9 @@ function loadSelectScreen()
 
 	-- TITLE SETTINGS
 	gameTitle = "Base Class+"
-	selectScreenTitleFont = love.graphics.newFont(48)	
-	gameTitleWidth = selectScreenTitleFont:getWidth(gameTitle)
-	gameTitleHeight = selectScreenTitleFont:getHeight(gameTitle)
+	gameTitleFont = love.graphics.newFont(48)	
+	gameTitleWidth = gameTitleFont:getWidth(gameTitle)
+	gameTitleHeight = gameTitleFont:getHeight(gameTitle)
 	gameTitleX = (gameWidth / 2) - (gameTitleWidth / 2)
 	gameTitleY = 25
 	
@@ -89,7 +89,7 @@ function loadSelectScreen()
 	isClassOptionActive = false
 	
 	-- MUSIC SETTINGS
-	selectScreenMusic = love.audio.newSource("soundtrack/select_screen.mp3", "stream")
+	ScreenMusic = love.audio.newSource("soundtrack/select_screen.mp3", "stream")
 	mouseClickMusic = love.audio.newSource("soundtrack/mouse_click.mp3", "static")
 	mouseClickMusic:setLooping(false)
 	isPlayedMouseClick = false
@@ -350,7 +350,7 @@ function drawSelectScreen()
 	love.graphics.setBackgroundColor(selectScreenRGB)
 	
 	-- DRAW SELECT SCREEN TITLE
-	love.graphics.setFont(selectScreenTitleFont)
+	love.graphics.setFont(gameTitleFont)
 	love.graphics.printf(gameTitle,0,gameTitleY,gameWidth,"center")
 		
 	-- DRAW FIGHT OPTION
