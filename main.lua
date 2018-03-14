@@ -89,7 +89,7 @@ function loadSelectScreen()
 	isClassOptionActive = false
 	
 	-- MUSIC SETTINGS
-	ScreenMusic = love.audio.newSource("soundtrack/select_screen.mp3", "stream")
+	selectScreenMusic = love.audio.newSource("soundtrack/select_screen.mp3", "stream")
 	mouseClickMusic = love.audio.newSource("soundtrack/mouse_click.mp3", "static")
 	mouseClickMusic:setLooping(false)
 	isPlayedMouseClick = false
