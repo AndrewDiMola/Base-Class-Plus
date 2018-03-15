@@ -8,6 +8,6 @@ The following sprites are being used as placeholders until further notice:
 
 In addition, the following songs are being used as placeholders until further notice:
 1. select_screen - "The Prelude" - Final Fantasy VII (Square Enix Co., Ltd.)
-2. mouse_click - "Cursor Move" - Final Fantasy VII (Square Enix Co., Ltd.)
+2. cursor_move - "Cursor Move" - Final Fantasy VII (Square Enix Co., Ltd.)
 3. class_screen - "Mog House" - Final Fantasy XI (Square Enix Co., Ltd.)
 4. fight_screen - "The Edge of Green" - Radiant Historia (Atlus Co., Ltd.)
