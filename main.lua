@@ -108,9 +108,36 @@ function loadFightScreen()
 	
 	-- SCREEN SETTINGS
 	fightScreen = {}
-	fightScreen.backgroundRGB = {255,127,39}
+	fightScreen.backgroundRGB = {63,72,204}
 	fightScreen.music = love.audio.newSource("soundtrack/fight_screen.mp3", "stream")
 	fightScreen.isScreenActive = false
+	
+	-- TITLE SETTINGS
+	fightScreenTitle = {}
+	fightScreenTitle.name = "Choose Your Party"
+	fightScreenTitle.font = love.graphics.newFont(48)
+	fightScreenTitle.width = fightScreenTitle.font:getWidth(fightScreenTitle.name)
+	fightScreenTitle.height = fightScreenTitle.font:getHeight(fightScreenTitle.name)
+	fightScreenTitle.X = (game.width / 2) - (fightScreenTitle.width / 2)
+	fightScreenTitle.Y = 25
+	
+	-- BATTLE MAP 1/2
+	battleMapSelect = {}
+	battleMapSelect.name = "The Viridian Expanse"
+	battleMapSelect.map = love.graphics.newImage("images/map_one_select.png")
+	battleMapSelect.width = battleMapSelect.map:getWidth() 
+	battleMapSelect.height = battleMapSelect.map:getHeight() 
+	battleMapSelect.X = (game.width / 2)  - (battleMapSelect.width / 2)
+	battleMapSelect.Y = (game.height / 6)
+	
+	-- BATTLE MAP 2/2
+	battleMapFight = {}
+	battleMapFight.name = "The Viridian Expanse"
+	battleMapFight.map = love.graphics.newImage("images/map_one_fight.png")
+	battleMapFight.width = battleMapFight.map:getWidth() 
+	battleMapFight.height = battleMapFight.map:getHeight() 
+	battleMapFight.X = (game.width / 2)  - (battleMapFight.width / 2)
+	battleMapFight.Y = (game.height / 6)
 	
 	-- COMBINED FIGHT SCREEN OPTIONS
 	fightScreenOptions = {returnOption}
@@ -179,10 +206,11 @@ function loadClassScreen()
 		
 	-- CLASS DESCRIPTION SETTINGS
 	activeClassDescription = {}
-	activeClassDescription.width = bruteLabel.width -- For now, width based on brute.width
-	activeClassDescription.height = bruteLabel.height -- For now, height based on brute.height
+	activeClassDescription.width = bruteLabel.description:getWidth() 
+	activeClassDescription.height = bruteLabel.description:getHeight()
 	activeClassDescription.X = (game.width / 2)  - (activeClassDescription.width / 2)
 	activeClassDescription.Y = (game.height / 6)
+	activeClassDescription.activeClass = bruteLabel
 	
 	-- COMBINED CLASS SCREEN OPTIONS
 	classScreenOptions = {returnOption}
@@ -267,6 +295,13 @@ function drawFightScreen()
 	love.graphics.setColor(game.optionsRGB)
 	love.graphics.setBackgroundColor(fightScreen.backgroundRGB)
 	
+	-- DRAW FIGHT SCREEN TITLE
+	love.graphics.setFont(fightScreenTitle.font)
+	love.graphics.printf(fightScreenTitle.name,0,fightScreenTitle.Y,game.width,"center")
+	
+	-- DRAW BATTLE MAP
+	love.graphics.draw(battleMapSelect.map,battleMapSelect.X,battleMapSelect.Y)
+	
 	-- DRAW FIGHT SCREEN OPTIONS
 	for index,option in pairs (fightScreenOptions) do
 		love.graphics.setFont(option.font)
@@ -287,16 +322,21 @@ function drawClassScreen()
 	love.graphics.setFont(classScreenTitle.font)
 	love.graphics.printf(classScreenTitle.name,0,classScreenTitle.Y,game.width,"center")
 
-	-- DRAW CLASS SCREEN OPTIONS
-	for index,option in pairs (classScreenOptions) do
-		love.graphics.setFont(option.font)
-		love.graphics.printf(option.name,0,option.Y,game.width,"center")
-	end
+	-- DRAW ACTIVE CLASS DESCRIPTION
+	love.graphics.draw(activeClassDescription.activeClass.description,activeClassDescription.X,activeClassDescription.Y)
 	
 	-- DRAW CLASS SCREEN LABELS
 	for index,option in pairs (classScreenLabels) do
 		love.graphics.setFont(option.font)
-		love.graphics.print(option.name,option.X,option.Y)
+			if option ~= activeClassDescription.activeClass then
+				love.graphics.print(option.name,option.X,option.Y)
+			end
+	end
+	
+	-- DRAW CLASS SCREEN OPTIONS
+	for index,option in pairs (classScreenOptions) do
+		love.graphics.setFont(option.font)
+		love.graphics.printf(option.name,0,option.Y,game.width,"center")
 	end
 	
 	-- CHANGE RGB FOR OPTIONS AND LABELS ON MOUSE HOVER 
@@ -322,7 +362,9 @@ function drawHoverRGB(objects) -- Takes in a list of objects (options and labels
 				if object == fightOption or object == classOption or object == returnOption then 
 					love.graphics.printf(object.name,0,object.Y,game.width,"center")
 				else
-					love.graphics.print(object.name,object.X,object.Y)
+					if object ~= activeClassDescription.activeClass then 
+						love.graphics.print(object.name,object.X,object.Y)
+					end
 				end
 		else
 			love.graphics.setColor(game.optionsRGB)
@@ -336,7 +378,9 @@ function updateOptionsAndLabels(objects) -- Takes in a list of objects (options 
 		
 		if isMouseOver then
 			if not game.playSoundEffect then
-				game.cursorMove:play()
+				if object ~= activeClassDescription.activeClass then 
+					game.cursorMove:play() 
+				end
 				game.playSoundEffect = true
 			end
 			
@@ -351,6 +395,7 @@ function updateOptionsAndLabels(objects) -- Takes in a list of objects (options 
 				if object == classOption then 
 					selectScreen.isScreenActive = false 
 					classScreen.isScreenActive = true 
+					activeClassDescription.activeClass = bruteLabel
 				end
 				
 				if object == returnOption and fightScreen.isScreenActive == true then -- Return from the Fight screen
@@ -362,6 +407,11 @@ function updateOptionsAndLabels(objects) -- Takes in a list of objects (options 
 					classScreen.isScreenActive = false
 					selectScreen.isScreenActive = true
 				end
+				
+				if object == bruteLabel then activeClassDescription.activeClass = object end
+				if object == speedsterLabel then activeClassDescription.activeClass = object end
+				if object == acolyteLabel then activeClassDescription.activeClass = object end
+				if object == zealotLabel then activeClassDescription.activeClass = object end
 			end
 			
 			object.isMouseOver = true
