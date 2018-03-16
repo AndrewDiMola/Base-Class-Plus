@@ -163,6 +163,8 @@ function loadClassScreen()
 	-- BRUTE LABEL SETTINGS
 	bruteLabel = {}
 	bruteLabel.name = "Brute"
+	bruteLabel.header = love.graphics.newImage("images/brute_header.png")
+	bruteLabel.portrait = love.graphics.newImage("images/brute_portrait.png")
 	bruteLabel.description = love.graphics.newImage("images/brute.png")
 	bruteLabel.font = love.graphics.newFont(24)
 	bruteLabel.width = bruteLabel.font:getWidth(bruteLabel.name)
@@ -174,6 +176,8 @@ function loadClassScreen()
 	-- SPEEDSTER LABEL SETTINGS
 	speedsterLabel = {}
 	speedsterLabel.name = "Speedster"
+	speedsterLabel.header = love.graphics.newImage("images/speedster_header.png")
+	speedsterLabel.portrait = love.graphics.newImage("images/speedster_portrait.png")
 	speedsterLabel.description = love.graphics.newImage("images/speedster.png")
 	speedsterLabel.font = love.graphics.newFont(24)
 	speedsterLabel.width = speedsterLabel.font:getWidth(speedsterLabel.name)
@@ -185,6 +189,8 @@ function loadClassScreen()
 	-- ACOLYTE LABEL SETTINGS
 	acolyteLabel = {}
 	acolyteLabel.name = "Acolyte"
+	acolyteLabel.header = love.graphics.newImage("images/acolyte_header.png")
+	acolyteLabel.portrait = love.graphics.newImage("images/acolyte_portrait.png")
 	acolyteLabel.description = love.graphics.newImage("images/acolyte.png")
 	acolyteLabel.font = love.graphics.newFont(24)
 	acolyteLabel.width = acolyteLabel.font:getWidth(acolyteLabel.name)
@@ -196,21 +202,31 @@ function loadClassScreen()
 	-- ZEALOT LABEL SETTINGS
 	zealotLabel = {}
 	zealotLabel.name = "Zealot"
+	zealotLabel.header = love.graphics.newImage("images/zealot_header.png")
+	zealotLabel.portrait = love.graphics.newImage("images/zealot_portrait.png")
 	zealotLabel.description = love.graphics.newImage("images/zealot.png")
 	zealotLabel.font = love.graphics.newFont(24)
 	zealotLabel.width = zealotLabel.font:getWidth(zealotLabel.name)
 	zealotLabel.height = zealotLabel.font:getHeight(zealotLabel.name)
 	zealotLabel.X = 650
 	zealotLabel.Y = game.height - 50
-	zealotLabel.isMouseOver = false
+	zealotLabel.isMouseOver = false	
 		
 	-- CLASS DESCRIPTION SETTINGS
 	activeClassDescription = {}
 	activeClassDescription.width = bruteLabel.description:getWidth() 
 	activeClassDescription.height = bruteLabel.description:getHeight()
-	activeClassDescription.X = (game.width / 2)  - (activeClassDescription.width / 2)
-	activeClassDescription.Y = (game.height / 6)
-	activeClassDescription.activeClass = bruteLabel
+	activeClassDescription.X = (game.width / 2) - (activeClassDescription.width / 2)
+	activeClassDescription.Y = game.height / 6
+	activeClassDescription.activeClass = bruteLabel		
+	
+	-- CLASS HEADER SETTINGS
+	activeClassHeader = {}
+	activeClassHeader.width = bruteLabel.header:getWidth() 
+	activeClassHeader.height = bruteLabel.header:getHeight()
+	activeClassHeader.X = activeClassDescription.X + 16
+	activeClassHeader.Y = activeClassDescription.Y + 16
+	activeClassHeader.activeClass = bruteLabel
 	
 	-- COMBINED CLASS SCREEN OPTIONS
 	classScreenOptions = {returnOption}
@@ -302,6 +318,9 @@ function drawFightScreen()
 	-- DRAW BATTLE MAP
 	love.graphics.draw(battleMapSelect.map,battleMapSelect.X,battleMapSelect.Y)
 	
+	-- DRAW ACTIVE CLASS HEADER
+	love.graphics.draw(activeClassDescription.activeClass.header,activeClassHeader.X,activeClassHeader.Y)
+	
 	-- DRAW FIGHT SCREEN OPTIONS
 	for index,option in pairs (fightScreenOptions) do
 		love.graphics.setFont(option.font)
@@ -321,7 +340,7 @@ function drawClassScreen()
 	-- DRAW CLASS SCREEN TITLE
 	love.graphics.setFont(classScreenTitle.font)
 	love.graphics.printf(classScreenTitle.name,0,classScreenTitle.Y,game.width,"center")
-
+	
 	-- DRAW ACTIVE CLASS DESCRIPTION
 	love.graphics.draw(activeClassDescription.activeClass.description,activeClassDescription.X,activeClassDescription.Y)
 	
@@ -380,6 +399,7 @@ function updateOptionsAndLabels(objects) -- Takes in a list of objects (options 
 			if not game.playSoundEffect then
 				if object ~= activeClassDescription.activeClass then 
 					game.cursorMove:play() 
+					game.cursorMove:rewind() 
 				end
 				game.playSoundEffect = true
 			end
