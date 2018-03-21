@@ -4,7 +4,7 @@ The following sprites are being used as placeholders until further notice:
 1. Brute - "Warrior" - Final Fantasy I (Square Enix Co., Ltd.)
 2. Speedster - "Thief" - Final Fantasy I (Square Enix Co., Ltd.)
 3. Acolyte - "White Mage" - Final Fantasy I (Square Enix Co., Ltd.)
-4. Zealot - "Black Mage" - Final Fantasy I (Square Enix Co., Ltd.)
+4. Zealot - "Wizard" (by Warren Clark)
 
 In addition, the following songs are being used as placeholders until further notice:
 1. select_screen - "The Prelude" - Final Fantasy VII (Square Enix Co., Ltd.)
