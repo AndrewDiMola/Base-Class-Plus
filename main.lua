@@ -24,9 +24,9 @@ function love.update(dt)
 		game.isMouseDown = false
 	end
 				
-	if selectScreen.isScreenActive then updateSelectScreen() end
-	if fightScreen.isScreenActive then updateFightScreen() end
-	if classScreen.isScreenActive then updateClassScreen() end
+	if selectScreen.isScreenActive then updateSelectScreen(dt) end
+	if fightScreen.isScreenActive then updateFightScreen(dt) end
+	if classScreen.isScreenActive then updateClassScreen(dt) end
 end
 
 function love.keypressed(key)
@@ -75,6 +75,7 @@ function loadSelectScreen()
 	-- SCREEN SETTINGS
 	selectScreen = {}
 	selectScreen.backgroundRGB = {131,192,240}
+	selectScreen.grassRGB = {34,177,76}
 	selectScreen.music = love.audio.newSource("soundtrack/select_screen.mp3", "stream")
 	selectScreen.isScreenActive = true
 
@@ -87,6 +88,14 @@ function loadSelectScreen()
 	selectScreenTitle.X = (game.width / 2) - (selectScreenTitle.width / 2)
 	selectScreenTitle.Y = 25
 	
+	-- GRASS SETTINGS
+	selectScreenGrass = {}
+	selectScreenGrass.drawMode = "fill"
+	selectScreenGrass.width = game.width
+	selectScreenGrass.height = game.height / 5
+	selectScreenGrass.X = 0
+	selectScreenGrass.Y = game.height - (game.height / 5)
+	
 	-- FIGHT OPTION SETTINGS
 	fightOption = {}
 	fightOption.name = "FIGHT!"
@@ -94,7 +103,7 @@ function loadSelectScreen()
 	fightOption.width = fightOption.font:getWidth(fightOption.name)
 	fightOption.height = fightOption.font:getHeight(fightOption.name)
 	fightOption.X = (game.width / 2) - (fightOption.width / 2)
-	fightOption.Y = game.height / 2
+	fightOption.Y = game.height / 2.3
 	fightOption.isMouseOver = false
 	fightOption.isKeyboardFocus = false
 	
@@ -105,7 +114,7 @@ function loadSelectScreen()
 	classOption.width = classOption.font:getWidth(classOption.name)
 	classOption.height = classOption.font:getHeight(classOption.name)
 	classOption.X = (game.width / 2) - (classOption.width / 2)
-	classOption.Y = (game.height / 2) + 50
+	classOption.Y = (game.height / 2.3) + 50
 	classOption.isMouseOver = false
 	classOption.isKeyboardFocus = false
 	
@@ -133,7 +142,7 @@ function loadFightScreen()
 	-- BATTLE MAP 1/2
 	battleMapSelect = {}
 	battleMapSelect.name = "The Viridian Expanse"
-	battleMapSelect.map = love.graphics.newImage("images/map_one_select.png")
+	battleMapSelect.map = love.graphics.newImage("images/maps/the_viridian_expanse/map_one_select.png")
 	battleMapSelect.width = battleMapSelect.map:getWidth() 
 	battleMapSelect.height = battleMapSelect.map:getHeight() 
 	battleMapSelect.X = (game.width / 2)  - (battleMapSelect.width / 2)
@@ -142,7 +151,7 @@ function loadFightScreen()
 	-- BATTLE MAP 2/2
 	battleMapFight = {}
 	battleMapFight.name = "The Viridian Expanse"
-	battleMapFight.map = love.graphics.newImage("images/map_one_fight.png")
+	battleMapFight.map = love.graphics.newImage("images/maps/the_viridian_expanse/map_one_fight.png")
 	battleMapFight.width = battleMapFight.map:getWidth() 
 	battleMapFight.height = battleMapFight.map:getHeight() 
 	battleMapFight.X = (game.width / 2)  - (battleMapFight.width / 2)
@@ -183,9 +192,9 @@ function loadClassScreen()
 	-- BRUTE LABEL SETTINGS
 	bruteLabel = {}
 	bruteLabel.name = "Brute"
-	bruteLabel.header = love.graphics.newImage("images/brute_header.png")
-	bruteLabel.portrait = love.graphics.newImage("images/brute_portrait.png")
-	bruteLabel.description = love.graphics.newImage("images/brute.png")
+	bruteLabel.header = love.graphics.newImage("images/brute/brute_header.png")
+	bruteLabel.portrait = love.graphics.newImage("images/brute/brute_portrait.png")
+	bruteLabel.description = love.graphics.newImage("images/brute/brute.png")
 	bruteLabel.font = love.graphics.newFont(24)
 	bruteLabel.width = bruteLabel.font:getWidth(bruteLabel.name)
 	bruteLabel.height = bruteLabel.font:getHeight(bruteLabel.name)
@@ -197,9 +206,9 @@ function loadClassScreen()
 	-- SPEEDSTER LABEL SETTINGS
 	speedsterLabel = {}
 	speedsterLabel.name = "Speedster"
-	speedsterLabel.header = love.graphics.newImage("images/speedster_header.png")
-	speedsterLabel.portrait = love.graphics.newImage("images/speedster_portrait.png")
-	speedsterLabel.description = love.graphics.newImage("images/speedster.png")
+	speedsterLabel.header = love.graphics.newImage("images/speedster/speedster_header.png")
+	speedsterLabel.portrait = love.graphics.newImage("images/speedster/speedster_portrait.png")
+	speedsterLabel.description = love.graphics.newImage("images/speedster/speedster.png")
 	speedsterLabel.font = love.graphics.newFont(24)
 	speedsterLabel.width = speedsterLabel.font:getWidth(speedsterLabel.name)
 	speedsterLabel.height = speedsterLabel.font:getHeight(speedsterLabel.name)
@@ -211,9 +220,9 @@ function loadClassScreen()
 	-- ACOLYTE LABEL SETTINGS
 	acolyteLabel = {}
 	acolyteLabel.name = "Acolyte"
-	acolyteLabel.header = love.graphics.newImage("images/acolyte_header.png")
-	acolyteLabel.portrait = love.graphics.newImage("images/acolyte_portrait.png")
-	acolyteLabel.description = love.graphics.newImage("images/acolyte.png")
+	acolyteLabel.header = love.graphics.newImage("images/acolyte/acolyte_header.png")
+	acolyteLabel.portrait = love.graphics.newImage("images/acolyte/acolyte_portrait.png")
+	acolyteLabel.description = love.graphics.newImage("images/acolyte/acolyte.png")
 	acolyteLabel.font = love.graphics.newFont(24)
 	acolyteLabel.width = acolyteLabel.font:getWidth(acolyteLabel.name)
 	acolyteLabel.height = acolyteLabel.font:getHeight(acolyteLabel.name)
@@ -225,9 +234,9 @@ function loadClassScreen()
 	-- ZEALOT LABEL SETTINGS
 	zealotLabel = {}
 	zealotLabel.name = "Zealot"
-	zealotLabel.header = love.graphics.newImage("images/zealot_header.png")
-	zealotLabel.portrait = love.graphics.newImage("images/zealot_portrait.png")
-	zealotLabel.description = love.graphics.newImage("images/zealot.png")
+	zealotLabel.header = love.graphics.newImage("images/zealot/zealot_header.png")
+	zealotLabel.portrait = love.graphics.newImage("images/zealot/zealot_portrait.png")
+	zealotLabel.description = love.graphics.newImage("images/zealot/zealot.png")
 	zealotLabel.font = love.graphics.newFont(24)
 	zealotLabel.width = zealotLabel.font:getWidth(zealotLabel.name)
 	zealotLabel.height = zealotLabel.font:getHeight(zealotLabel.name)
@@ -235,6 +244,16 @@ function loadClassScreen()
 	zealotLabel.Y = game.height - 50
 	zealotLabel.isMouseOver = false	
 	zealotLabel.isKeyboardFocus = false
+	
+	zealotLabel.animationWidth = 80
+	zealotLabel.animationHeight = 56
+	zealotLabel.animationDuration = 0.5
+	zealotLabel.animationOrientation = 0
+	zealotLabel.animationScale = 2
+	zealotLabel.animationX = (0 - (zealotLabel.animationWidth * zealotLabel.animationScale))
+	zealotLabel.animationY = 380
+	zealotLabel.animationSpeed = 0 -- + dt
+	zealotLabel.animation = newAnimation(love.graphics.newImage("images/zealot/zealot_running_animation.png"), zealotLabel.animationWidth, zealotLabel.animationHeight, zealotLabel.animationDuration)
 		
 	-- CLASS DESCRIPTION SETTINGS
 	activeClassDescription = {}
@@ -277,12 +296,22 @@ end
 ---- love.update utility functions ----
 ---------------------------------------
 
-function updateSelectScreen()
+function updateSelectScreen(dt)
 
 	-- MUSIC UPDATES
 	fightScreen.music:stop()
 	classScreen.music:stop()
 	selectScreen.music:play() 
+		
+	-- ANIMATION UPDATES
+	zealotLabel.animation.currentTime = zealotLabel.animation.currentTime + dt
+	zealotLabel.animationSpeed = zealotLabel.animationSpeed + (dt * 125) 
+	
+	if zealotLabel.animationSpeed > (game.width + (zealotLabel.animationWidth * zealotLabel.animationScale)) then zealotLabel.animationSpeed = (0 - (zealotLabel.animationWidth * zealotLabel.animationScale))  end
+	
+    if zealotLabel.animation.currentTime >= zealotLabel.animation.duration then
+        zealotLabel.animation.currentTime = zealotLabel.animation.currentTime - zealotLabel.animation.duration
+    end
 		
 	-- OPTION UPDATES
 	updateOptionsAndLabels(selectScreenOptions)
@@ -291,7 +320,7 @@ function updateSelectScreen()
 	if not fightOption.isMouseOver and not classOption.isMouseOver then game.playSoundEffect = false end
 end
 
-function updateFightScreen()
+function updateFightScreen(dt)
 	
 	-- MUSIC UPDATES
 	selectScreen.music:stop()
@@ -304,7 +333,7 @@ function updateFightScreen()
 	if not returnFromFightOption.isMouseOver then game.playSoundEffect = false end
 end
 
-function updateClassScreen()
+function updateClassScreen(dt)
 	
 	-- MUSIC UPDATES
 	selectScreen.music:stop()
@@ -340,6 +369,14 @@ function drawSelectScreen()
 		love.graphics.printf(option.name,0,option.Y,game.width,"center")
 	end
 
+	-- DRAW ANIMATIONS
+	local spriteNum = math.floor(zealotLabel.animation.currentTime / zealotLabel.animation.duration * #zealotLabel.animation.quads) + 1
+    love.graphics.draw(zealotLabel.animation.spriteSheet, zealotLabel.animation.quads[spriteNum], zealotLabel.animationX + zealotLabel.animationSpeed, zealotLabel.animationY, zealotLabel.animationOrientation, zealotLabel.animationScale)
+	
+	-- DRAW GRASS
+	love.graphics.setColor(selectScreen.grassRGB) --Red
+	love.graphics.rectangle(selectScreenGrass.drawMode, selectScreenGrass.X, selectScreenGrass.Y, selectScreenGrass.width, selectScreenGrass.height)
+	
 	-- CHANGE RGB FOR OPTIONS ON MOUSE HOVER OR KEYBOARD CHANGE 
 	drawHoverOrKeyboardRGB(selectScreenOptions)
 end
@@ -443,6 +480,7 @@ function updateFightScreenKeyPressed(key)
 			clearKeyboardFocus()
 			fightScreen.isScreenActive = false
 			selectScreen.isScreenActive = true
+			zealotLabel.animationSpeed = 0
 		end
 	end
 end
@@ -459,6 +497,7 @@ function updateClassScreenKeyPressed(key)
 			clearKeyboardFocus()		
 			classScreen.isScreenActive = false
 			selectScreen.isScreenActive = true
+			zealotLabel.animationSpeed = 0
 		end
 	end
 end
@@ -552,11 +591,13 @@ function updateOptionsAndLabels(objects) -- Takes in a list of objects (options 
 				if object == returnFromFightOption and fightScreen.isScreenActive == true then -- Return from the Fight screen
 					fightScreen.isScreenActive = false
 					selectScreen.isScreenActive = true
+					zealotLabel.animationSpeed = 0
 				end
 				
 				if object == returnFromClassOption and classScreen.isScreenActive == true then -- Return from the Class screen
 					classScreen.isScreenActive = false
 					selectScreen.isScreenActive = true
+					zealotLabel.animationSpeed = 0
 				end
 				
 				if object == bruteLabel then activeClassDescription.activeClass = object end
@@ -570,4 +611,21 @@ function updateOptionsAndLabels(objects) -- Takes in a list of objects (options 
 			object.isMouseOver = false
 		end
 	end
+end
+
+function newAnimation(image, width, height, duration)
+    local animation = {}
+    animation.spriteSheet = image
+    animation.quads = {}
+ 
+    for y = 0, image:getHeight() - height, height do
+        for x = 0, image:getWidth() - width, width do
+            table.insert(animation.quads, love.graphics.newQuad(x, y, width, height, image:getDimensions()))
+        end
+    end
+ 
+    animation.duration = duration or 1
+    animation.currentTime = 0
+ 
+    return animation
 end
