@@ -30,7 +30,22 @@ function love.update(dt)
 end
 
 function love.keypressed(key)
-  
+
+	if game.isKeyBoardActive then
+		if selectScreen.isScreenActive then updateSelectScreenKeyPressed(key) end
+		if fightScreen.isScreenActive then updateFightScreenKeyPressed(key) end
+		if classScreen.isScreenActive then updateClassScreenKeyPressed(key) end
+	end
+
+	-- LET THE GAME KNOW THE KEYBOARD IS BEING USED IF THE PLAYER USES ANY DIRECTIONAL ARROWS
+	if not game.isKeyBoardActive and (key == "up" or key == "down" or key == "left" or key == "right") then 
+		game.isKeyBoardActive = true 
+		
+		-- DEFAULT FOCUS BY SCREEN
+		if selectScreen.isScreenActive then fightOption.isKeyboardFocus = true end
+		if fightScreen.isScreenActive then returnFromFightOption.isKeyboardFocus = true end
+		if classScreen.isScreenActive then returnFromClassOption.isKeyboardFocus = true end
+	end
 end
 
 ---------------------------------------
@@ -46,21 +61,13 @@ function loadGeneralSettings()
 	game.mouseX = 0
 	game.mouseY = 0
 	game.isMouseDown = false
+	game.isKeyBoardActive = false
 	game.cursorMove = love.audio.newSource("soundtrack/cursor_move.mp3", "static")
 	game.cursorMove:setLooping(false)
 	game.playSoundEffect = false
 	game.optionsRGB = {255,255,255}
 	game.hoverRGB = {0,0,0}
-
-	-- RETURN OPTION SETTINGS
-	returnOption = {}
-	returnOption.name = "RETURN"
-	returnOption.font = love.graphics.newFont(36)
-	returnOption.width = returnOption.font:getWidth(returnOption.name)
-	returnOption.height = returnOption.font:getHeight(returnOption.name)
-	returnOption.X = (game.width / 2) - (returnOption.width / 2)
-	returnOption.Y = game.height - 100	
-	returnOption.isMouseOver = false
+	game.keyPressedRGB = {0,0,0}
 end
 
 function loadSelectScreen()
@@ -89,6 +96,7 @@ function loadSelectScreen()
 	fightOption.X = (game.width / 2) - (fightOption.width / 2)
 	fightOption.Y = game.height / 2
 	fightOption.isMouseOver = false
+	fightOption.isKeyboardFocus = false
 	
 	-- CLASS OPTION SETTINGS
 	classOption = {}
@@ -99,6 +107,7 @@ function loadSelectScreen()
 	classOption.X = (game.width / 2) - (classOption.width / 2)
 	classOption.Y = (game.height / 2) + 50
 	classOption.isMouseOver = false
+	classOption.isKeyboardFocus = false
 	
 	-- COMBINED SELECT SCREEN OPTIONS
 	selectScreenOptions = {fightOption, classOption}
@@ -139,8 +148,19 @@ function loadFightScreen()
 	battleMapFight.X = (game.width / 2)  - (battleMapFight.width / 2)
 	battleMapFight.Y = (game.height / 6)
 	
+	-- RETURN OPTION SETTINGS
+	returnFromFightOption = {}
+	returnFromFightOption.name = "RETURN"
+	returnFromFightOption.font = love.graphics.newFont(36)
+	returnFromFightOption.width = returnFromFightOption.font:getWidth(returnFromFightOption.name)
+	returnFromFightOption.height = returnFromFightOption.font:getHeight(returnFromFightOption.name)
+	returnFromFightOption.X = (game.width / 2) - (returnFromFightOption.width / 2)
+	returnFromFightOption.Y = game.height - 100	
+	returnFromFightOption.isMouseOver = false
+	returnFromFightOption.isKeyboardFocus = false
+	
 	-- COMBINED FIGHT SCREEN OPTIONS
-	fightScreenOptions = {returnOption}
+	fightScreenOptions = {returnFromFightOption}
 end
 
 function loadClassScreen()
@@ -172,6 +192,7 @@ function loadClassScreen()
 	bruteLabel.X = 50
 	bruteLabel.Y = game.height - 50
 	bruteLabel.isMouseOver = true
+	bruteLabel.isKeyboardFocus = false
 	
 	-- SPEEDSTER LABEL SETTINGS
 	speedsterLabel = {}
@@ -185,6 +206,7 @@ function loadClassScreen()
 	speedsterLabel.X = 250
 	speedsterLabel.Y = game.height - 50
 	speedsterLabel.isMouseOver = false
+	speedsterLabel.isKeyboardFocus = false
 	
 	-- ACOLYTE LABEL SETTINGS
 	acolyteLabel = {}
@@ -198,6 +220,7 @@ function loadClassScreen()
 	acolyteLabel.X = 450
 	acolyteLabel.Y = game.height - 50
 	acolyteLabel.isMouseOver = false
+	acolyteLabel.isKeyboardFocus = false
 
 	-- ZEALOT LABEL SETTINGS
 	zealotLabel = {}
@@ -211,6 +234,7 @@ function loadClassScreen()
 	zealotLabel.X = 650
 	zealotLabel.Y = game.height - 50
 	zealotLabel.isMouseOver = false	
+	zealotLabel.isKeyboardFocus = false
 		
 	-- CLASS DESCRIPTION SETTINGS
 	activeClassDescription = {}
@@ -228,14 +252,25 @@ function loadClassScreen()
 	activeClassHeader.Y = activeClassDescription.Y + 16
 	activeClassHeader.activeClass = bruteLabel
 	
+	-- RETURN OPTION SETTINGS
+	returnFromClassOption = {}
+	returnFromClassOption.name = "RETURN"
+	returnFromClassOption.font = love.graphics.newFont(36)
+	returnFromClassOption.width = returnFromClassOption.font:getWidth(returnFromClassOption.name)
+	returnFromClassOption.height = returnFromClassOption.font:getHeight(returnFromClassOption.name)
+	returnFromClassOption.X = (game.width / 2) - (returnFromClassOption.width / 2)
+	returnFromClassOption.Y = game.height - 100	
+	returnFromClassOption.isMouseOver = false
+	returnFromClassOption.isKeyboardFocus = false
+	
 	-- COMBINED CLASS SCREEN OPTIONS
-	classScreenOptions = {returnOption}
+	classScreenOptions = {returnFromClassOption}
 	
 	-- COMBINED CLASS SCREEN LABELS
 	classScreenLabels = {bruteLabel, speedsterLabel, acolyteLabel, zealotLabel}
 	
 	-- COMBINED CLASS SCREEN OPTIONS AND LABELS
-	classScreenOptionsAndLabels = {returnOption, bruteLabel, speedsterLabel, acolyteLabel, zealotLabel}
+	classScreenOptionsAndLabels = {returnFromClassOption, bruteLabel, speedsterLabel, acolyteLabel, zealotLabel}
 end
 
 ---------------------------------------
@@ -251,7 +286,7 @@ function updateSelectScreen()
 		
 	-- OPTION UPDATES
 	updateOptionsAndLabels(selectScreenOptions)
-	
+		
 	-- ONLY PLAY THE CURSOR MOVE SOUND EFFECT WHEN HOVERING OVER AN OPTION
 	if not fightOption.isMouseOver and not classOption.isMouseOver then game.playSoundEffect = false end
 end
@@ -266,7 +301,7 @@ function updateFightScreen()
 	updateOptionsAndLabels(fightScreenOptions)
 	
 	-- ONLY PLAY THE CURSOR MOVE SOUND EFFECT WHEN HOVERING OVER AN OPTION
-	if not returnOption.isMouseOver then game.playSoundEffect = false end
+	if not returnFromFightOption.isMouseOver then game.playSoundEffect = false end
 end
 
 function updateClassScreen()
@@ -276,10 +311,14 @@ function updateClassScreen()
 	classScreen.music:play() 
 	
 	-- OPTION AND LABEL UPDATES
+	local classLabel = activeClassDescription.activeClass
+	local activeClassIndex = findIndexInTable(classScreenOptionsAndLabels, classLabel)
+	table.remove(classScreenOptionsAndLabels,activeClassIndex) -- Don't update the active label, because it is not visible
 	updateOptionsAndLabels(classScreenOptionsAndLabels)
+	table.insert(classScreenOptionsAndLabels,classLabel) -- Add the removed label back
 	
 	-- ONLY PLAY THE CURSOR MOVE SOUND EFFECT WHEN HOVERING OVER AN OPTION OR LABEL
-	if not returnOption.isMouseOver and not bruteLabel.isMouseOver and not speedsterLabel.isMouseOver and not acolyteLabel.isMouseOver and not zealotLabel.isMouseOver then game.playSoundEffect = false end
+	if not returnFromClassOption.isMouseOver and not bruteLabel.isMouseOver and not speedsterLabel.isMouseOver and not acolyteLabel.isMouseOver and not zealotLabel.isMouseOver then game.playSoundEffect = false end
 end
 
 ---------------------------------------
@@ -300,9 +339,9 @@ function drawSelectScreen()
 		love.graphics.setFont(option.font)
 		love.graphics.printf(option.name,0,option.Y,game.width,"center")
 	end
-	
-	-- CHANGE RGB FOR OPTIONS ON MOUSE HOVER 
-	drawHoverRGB(selectScreenOptions)
+
+	-- CHANGE RGB FOR OPTIONS ON MOUSE HOVER OR KEYBOARD CHANGE 
+	drawHoverOrKeyboardRGB(selectScreenOptions)
 end
 
 function drawFightScreen()
@@ -327,8 +366,8 @@ function drawFightScreen()
 		love.graphics.printf(option.name,0,option.Y,game.width,"center")
 	end
 	
-	-- CHANGE RGB FOR OPTIONS ON MOUSE HOVER 
-	drawHoverRGB(fightScreenOptions)
+	-- CHANGE RGB FOR OPTIONS ON MOUSE HOVER OR KEYBOARD CHANGE 
+	drawHoverOrKeyboardRGB(fightScreenOptions)
 end
 
 function drawClassScreen()
@@ -358,13 +397,83 @@ function drawClassScreen()
 		love.graphics.printf(option.name,0,option.Y,game.width,"center")
 	end
 	
-	-- CHANGE RGB FOR OPTIONS AND LABELS ON MOUSE HOVER 
-	drawHoverRGB(classScreenOptionsAndLabels)
+	-- CHANGE RGB FOR OPTIONS ON MOUSE HOVER OR KEYBOARD CHANGE 
+	drawHoverOrKeyboardRGB(classScreenOptionsAndLabels)
+end
+
+---------------------------------------
+-- love.keypressed utility functions --
+---------------------------------------
+function updateSelectScreenKeyPressed(key)
+
+	-- ACTUAL KEYBOARD FUNCTIONALITY			
+	if key == "up" or key == "down" then
+		if fightOption.isKeyboardFocus and not classOption.isKeyboardFocus then
+			fightOption.isKeyboardFocus = false
+			classOption.isKeyboardFocus = true
+		else 
+			fightOption.isKeyboardFocus = true
+			classOption.isKeyboardFocus = false
+		end
+	end
+
+	if key == "return" then
+		if fightOption.isKeyboardFocus then 
+			clearKeyboardFocus()
+			selectScreen.isScreenActive = false
+			fightScreen.isScreenActive = true 
+		end
+		if classOption.isKeyboardFocus then 
+			clearKeyboardFocus()
+			selectScreen.isScreenActive = false
+			classScreen.isScreenActive = true
+		end
+	end
+end
+
+function updateFightScreenKeyPressed(key)
+		
+	-- ACTUAL KEYBOARD FUNCTIONALITY
+	if key == "up" or key == "down" then
+		returnFromFightOption.isKeyboardFocus = not returnFromFightOption.isKeyboardFocus
+	end
+
+	if key == "return" then
+		if returnFromFightOption.isKeyboardFocus then 
+			clearKeyboardFocus()
+			fightScreen.isScreenActive = false
+			selectScreen.isScreenActive = true
+		end
+	end
+end
+
+function updateClassScreenKeyPressed(key)
+	
+	-- ACTUAL KEYBOARD FUNCTIONALITY
+	if key == "up" or key == "down" then
+		returnFromClassOption.isKeyboardFocus = not returnFromClassOption.isKeyboardFocus
+	end
+
+	if key == "return" then
+		if returnFromClassOption.isKeyboardFocus then
+			clearKeyboardFocus()		
+			classScreen.isScreenActive = false
+			selectScreen.isScreenActive = true
+		end
+	end
 end
 
 ---------------------------------------
 --- miscellaneous utility functions ---
 ---------------------------------------
+function findIndexInTable(tab,val)
+	for index,value in pairs(tab) do
+		if value == val then
+			return index
+		end
+	end
+end
+
 function isMouseInRectangle(object) -- Takes in a rectangular object (option or label) represented as a table and then returns true if the mouse's position is within that object
 	if game.mouseX >= object.X and game.mouseX <= (object.X + object.width) and game.mouseY >= object.Y and game.mouseY <= (object.Y + object.height) then 
 		return true
@@ -373,12 +482,30 @@ function isMouseInRectangle(object) -- Takes in a rectangular object (option or 
 	end
 end
 
-function drawHoverRGB(objects) -- Takes in a list of objects (options and labels) represented as tables and then draws those objects with a custom onHover RGB
+function clearKeyboardFocus() -- Resets all .isKeyboardFocus values to false
+	
+	-- SELECT SCREEN OPTIONS
+	for index,object in pairs(selectScreenOptions) do
+		object.isKeyboardFocus = false
+	end
+	
+	-- FIGHT SCREEN OPTIONS
+	for index,object in pairs(fightScreenOptions) do
+		object.isKeyboardFocus = false
+	end
+	
+	-- CLASS SCREEN OPTIONS AND LABELS
+	for index,object in pairs(classScreenOptionsAndLabels) do
+		object.isKeyboardFocus = false
+	end
+end
+
+function drawHoverOrKeyboardRGB(objects) -- Takes in a list of objects (options and labels) represented as tables and then draws those objects with a custom onHover RGB
 	for index,object in pairs (objects) do
-		if object.isMouseOver then
+		if object.isMouseOver or object.isKeyboardFocus then
 			love.graphics.setFont(object.font)	
 			love.graphics.setColor(game.hoverRGB)
-				if object == fightOption or object == classOption or object == returnOption then 
+				if object == fightOption or object == classOption or object == returnFromFightOption or object == returnFromClassOption then 
 					love.graphics.printf(object.name,0,object.Y,game.width,"center")
 				else
 					if object ~= activeClassDescription.activeClass then 
@@ -396,34 +523,38 @@ function updateOptionsAndLabels(objects) -- Takes in a list of objects (options 
 		local isMouseOver = isMouseInRectangle(object)
 		
 		if isMouseOver then
+			-- TAKE AWAY KEYBOARD FUNCTIONALITY IF USING THE MOUSE
+			game.isKeyBoardActive = false
+			clearKeyboardFocus()
+		
+			-- PLAY A SOUND EFFECT IF HOVERING OVER AN OBJECT
 			if not game.playSoundEffect then
-				if object ~= activeClassDescription.activeClass then 
-					game.cursorMove:play() 
-					game.cursorMove:rewind() 
-				end
+				game.cursorMove:play() 
+				game.cursorMove:rewind() 
 				game.playSoundEffect = true
 			end
 			
+			-- ACTUAL MOUSE FUNCTIONALITY
 			if game.isMouseDown then
 				game.playSoundEffect = false
 				
-				if object == fightOption then 
+				if object == fightOption then -- Go to Fight screen
 					selectScreen.isScreenActive = false 
 					fightScreen.isScreenActive = true 
 				end
 				
-				if object == classOption then 
+				if object == classOption then -- Go to Class screen
 					selectScreen.isScreenActive = false 
 					classScreen.isScreenActive = true 
 					activeClassDescription.activeClass = bruteLabel
 				end
 				
-				if object == returnOption and fightScreen.isScreenActive == true then -- Return from the Fight screen
+				if object == returnFromFightOption and fightScreen.isScreenActive == true then -- Return from the Fight screen
 					fightScreen.isScreenActive = false
 					selectScreen.isScreenActive = true
 				end
 				
-				if object == returnOption and classScreen.isScreenActive == true then -- Return from the Class screen
+				if object == returnFromClassOption and classScreen.isScreenActive == true then -- Return from the Class screen
 					classScreen.isScreenActive = false
 					selectScreen.isScreenActive = true
 				end
