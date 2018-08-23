@@ -11,3 +11,5 @@ In addition, the following songs are being used as placeholders until further no
 2. cursor_move - "Cursor Move" - Final Fantasy VII (Square Enix Co., Ltd.)
 3. class_screen - "Mog House" - Final Fantasy XI (Square Enix Co., Ltd.)
 4. fight_screen - "The Edge of Green" - Radiant Historia (Atlus Co., Ltd.)
+
+A few menu screens are currently available, but gameplay has not yet been implemented.
