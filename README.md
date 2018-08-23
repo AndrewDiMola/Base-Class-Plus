@@ -12,4 +12,6 @@ In addition, the following songs are being used as placeholders until further no
 3. class_screen - "Mog House" - Final Fantasy XI (Square Enix Co., Ltd.)
 4. fight_screen - "The Edge of Green" - Radiant Historia (Atlus Co., Ltd.)
 
-A few menu screens are currently available, but gameplay has not yet been implemented.
+A few menu screens are currently available, but gameplay has not yet been implemented. Although, it's a pretty good reference for anyone interested in learning how to save state between screens and build a menu-based GUI. 
+
+Update: This project was developed with LÖVE 10.X, and is not compatable with LÖVE 11.X+
