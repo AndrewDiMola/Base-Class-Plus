@@ -14,4 +14,6 @@ In addition, the following songs are being used as placeholders until further no
 
 A few menu screens are currently available, but gameplay has not yet been implemented. Although, it's a pretty good reference for anyone interested in learning how to save state between screens and build a menu-based GUI. 
 
+![simpledemo](https://raw.githubusercontent.com/AndrewDiMola/Base-Class-Plus/master/images/base-class-plus-demo.gif)
+
 Update: This project was developed with LÖVE 10.X, and is not compatable with LÖVE 11.X+
